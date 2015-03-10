@@ -344,5 +344,3 @@ plot_progress = ->
       return
 
    return
-
-plot_progress()

@@ -1,11 +1,12 @@
 {% load staticfiles %}
+{% load compile_static %}
 
 <!DOCTYPE HTML>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <title>EdX Learning Dashboard Challenge Prototype Demo</title>
+  <title>Student's Dashboard Demo</title>
   <link rel="stylesheet" href="{% static 'styles/style.css' %}">
   <script src="{% static 'scripts/d3.v3.min.js' %}"></script>
 </head>
@@ -18,7 +19,7 @@
       </span>
       <span class="nav-provider">MITx:</span>
       <span class="nav-text">0.000x </span>
-      <span class="nav-text nav-hide-on-small">EdX Learning Dashboard Challenge</span>
+      <span class="nav-text nav-hide-on-small">Student's Dashboard</span>
       <span class="nav-text nav-float-right">
         <select name="student" id="select-student"></select>
         <script src="{% static 'scripts/student-selectbox.js' %}"></script>
@@ -44,7 +45,8 @@
             <select name="peers" id="select-peer"></select>
           </div>
         </div>
-        <script src="{% static 'scripts/progress-donut-chart.js' %}"></script>
+        <script src="{% static '' %}{% compile 'scripts/progress-donut-chart.coffee' %}"></script>
+        <script>plot_progress();</script>
       </div>
     </div>
     <div id="rcol">
@@ -60,7 +62,8 @@
             <span>progress</span>
           </div>
         </div>
-        <script src="{% static 'scripts/timeline-line-chart.js' %}"></script>
+        <script src="{% static '' %}{% compile 'scripts/timeline-line-chart.coffee' %}"></script>
+        <script>plot_timeline();</script>
       </div>
       <div class="card">
         <h2 class="card-header">Leaderboard</h2>
@@ -71,7 +74,8 @@
             </select>
           </div>
         </div>
-        <script src="{% static 'scripts/leaderboard-bar-chart.js' %}"></script>
+        <script src="{% static '' %}{% compile 'scripts/leaderboard-bar-chart.coffee' %}"></script>
+        <script lab>plot_leaderboard();</script>
       </div>
     </div>
   </div>

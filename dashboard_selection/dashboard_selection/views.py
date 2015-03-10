@@ -7,6 +7,7 @@ from django.core.files.storage import default_storage
 import os
 
 
+
 def statistics(request):
     t = get_template('main.html')
     return HttpResponse(t.render(Context({})))

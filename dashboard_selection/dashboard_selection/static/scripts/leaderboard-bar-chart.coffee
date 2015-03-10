@@ -110,4 +110,3 @@ plot_leaderboard = ->
 
    return
 
-plot_leaderboard()

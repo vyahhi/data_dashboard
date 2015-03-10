@@ -207,5 +207,3 @@ plot_timeline = ->
       return
 
    return
-
-plot_timeline()

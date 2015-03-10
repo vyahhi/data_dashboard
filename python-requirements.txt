@@ -1,2 +1,2 @@
-django>=1.7.5
-django-coffeescript 
+django>=1.7
+django-static-precompiler>=0.9

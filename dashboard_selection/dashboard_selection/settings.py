@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'static_precompiler',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,8 +89,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+#from
+STATIC_PRECOMPILER_COMPILERS = (
+    'dashboard_selection.coffee_bare.CoffeeScriptBare',
+)
+
+
+STATIC_PRECOMPILER_ROOT = os.path.join(PROJECT_DIR, "static")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, "static").replace('\\', '/'),
     os.path.join(PROJECT_DIR, "data").replace('\\', '/'),
 )
+
