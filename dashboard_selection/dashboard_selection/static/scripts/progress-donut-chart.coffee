@@ -1,4 +1,4 @@
-plot_progress = ->
+plot_progress = (studentID) ->
 
    # build up skeleton for rendering
    selector = d3.select("#progress")
@@ -210,30 +210,32 @@ plot_progress = ->
             d3.select("#select-category").on("change", ->
                category = @value
                studentData = data.getStudentData(studentID)
-               update label
+               update(label)
                return
             )
 
+            ###
             d3.select("#select-student").on("change", ->
                studentID = @value
                studentData = data.getStudentData(studentID)
-               update label
+               update(label)
                return
             )
+            ###
 
             d3.select("#select-peer").on("change", ->
                peerType = @value
                peerData = data.getPeerData(peerType)
-               update label, true
+               update(label, true)
                return
             )
 
             # show corresponding report & highlight hovered arc when hovering an arc *path*
             arcs.on("mouseover", ->
-               arcHover this, 0.7, 0, 1
+               arcHover(this, 0.7, 0, 1)
                return
             ).on("mouseout", ->
-               arcHover this, 1, 1, 0
+               arcHover(this, 1, 1, 0)
                return
             )
 
@@ -277,7 +279,7 @@ plot_progress = ->
             helpText.attr "opacity", 0.2
 
          valToPercentString = (val) ->
-            Math.abs(Math.floor(val * 100)) + "%"
+            "#{ Math.abs(Math.floor(val * 100)) }%"
 
          generateComparisonText = (val) ->
             (if val >= 0 then valToPercentString(val) + " ahead of peers" else valToPercentString(val) + " behind peers")
@@ -331,7 +333,7 @@ plot_progress = ->
             ).text((d) -> peerTypeToTitleText[d])
 
          category = d3.select("#select-category").property("value")
-         studentID = d3.select("#select-student").property("value")
+         #studentID = d3.select("#select-student").property("value")
          peerType = d3.select("#select-peer").property("value")
          studentData = data.getStudentData(studentID)
          peerData = data.getPeerData(peerType)

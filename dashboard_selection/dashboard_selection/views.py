@@ -8,7 +8,7 @@ import os
 
 
 
-def statistics(request):
+def home(request):
     t = get_template('main.html')
     return HttpResponse(t.render(Context({})))
 
@@ -20,4 +20,5 @@ def get_json(request, filename):
 
 
 def dashboard(request, student_id):
-    pass
+    t = get_template('student.html')
+    return HttpResponse(t.render(Context({'student_id': student_id})))

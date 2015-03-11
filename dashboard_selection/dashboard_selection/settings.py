@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'static_precompiler',
+    'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -96,6 +97,7 @@ STATIC_PRECOMPILER_COMPILERS = (
 
 
 STATIC_PRECOMPILER_ROOT = os.path.join(PROJECT_DIR, "static")
+STATIC_PRECOMPILER_PREPEND_STATIC_URL = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, "static").replace('\\', '/'),

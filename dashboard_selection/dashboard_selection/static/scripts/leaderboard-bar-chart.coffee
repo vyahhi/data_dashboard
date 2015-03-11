@@ -1,9 +1,9 @@
-plot_leaderboard = ->
+plot_leaderboard = (student_id) ->
 
    # highlight oneself
    highlightOneself = (selection) ->
       selection.classed("lb-oneself", (d) ->
-         d.id == parseInt(d3.select("#select-student").property("value"))
+         d.id == student_id #parseInt(d3.select("#select-student").property("value"))
       )
       return
    reformatScoreByLabel = (val, label) ->
@@ -99,12 +99,14 @@ plot_leaderboard = ->
       d3.select(window).on("resize", render)
       d3.select("#leaderboard").on("change", render)
 
+      ###
       # rehighlight oneself when student changes
       d3.select("#select-student").on("change.leaderboard", ->
          table.selectAll("td")
             .call(highlightOneself)
          return
       )
+      ###
 
       return
 

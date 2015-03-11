@@ -1,0 +1,42 @@
+{% load staticfiles %}
+{% load compile_static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Student's Dashboard Demo</title>
+  <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+  <script src="{% static 'scripts/d3.v3.min.js' %}"></script>
+</head>
+
+<body>
+  <header>
+    <nav class='nav'>
+      <span class="nav-logo">
+      </span>
+      <span class="nav-provider">MITx:</span>
+      <span class="nav-text">0.000x </span>
+      <span class="nav-text nav-hide-on-small">Student's Dashboard</span>
+      {% block students_list %}
+      <span class="nav-text nav-float-right">
+        <select name="student" id="select-student"></select>
+        <script src="{% compile 'scripts/student-selectbox.coffee' %}"></script>
+      </span>
+      {% endblock %}
+    </nav>
+  </header>
+  <nav class="nav-course">
+    <span>Courseware</span>
+    <span class="tab-active">Progress</span>
+  </nav>
+
+  <div class="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+</body>
+
+</html>
