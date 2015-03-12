@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'static_precompiler',
-    'django.template.loaders.app_directories.Loader',
+#    'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
