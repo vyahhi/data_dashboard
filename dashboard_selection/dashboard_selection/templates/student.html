@@ -1,55 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load compile_static %}
-
 {% block content %}
-  <div class="content">
     <div id="lcol">
-      <div class="card">
-        <h2 class="card-header">Progress</h2>
-        <div class="card-content" id="progress">
-          <div class="chart-options">
-            <label for="category">Show</label>
-            <select name="category" id="select-category">
-              <option value="problem" selected>problem</option>
-              <option value="video">video</option>
-            </select>
-            <label for="peers"> progress compared to</label>
-            <select name="peers" id="select-peer"></select>
-          </div>
-        </div>
-        <script src="{% compile 'scripts/progress-donut-chart.coffee' %}"></script>
-        <script>plot_progress({{ student_id }});</script>
-      </div>
+      {{ progress | safe }}
     </div>
     <div id="rcol">
-      <div class="card">
-        <h2 class="card-header">Timeline</h2>
-        <div class="card-content" id="timeline">
-          <div class="chart-options">
-            <label for="timelinetype">Show</label>
-            <select name="timelinetype" id="select-timelinetype">
-              <option value="accumulated" selected>accumulated</option>
-              <option value="perday">perday</option>
-            </select>
-            <span>progress</span>
-          </div>
-        </div>
-        <script src="{% compile 'scripts/timeline-line-chart.coffee' %}"></script>
-        <script>plot_timeline({{ student_id }});</script>
-      </div>
-      <div class="card">
-        <h2 class="card-header">Leaderboard</h2>
-        <div class="card-content" id="leaderboard">
-          <div class="chart-options">
-            <label for="top10">Show</label>
-            <select name="top10" id="select-top10">
-            </select>
-          </div>
-        </div>
-        <script src="{% compile 'scripts/leaderboard-bar-chart.coffee' %}"></script>
-        <script lab>plot_leaderboard({{ student_id }});</script>
-      </div>
+      {{ timeline | safe }}
+      {{ leaderboard | safe }}
     </div>
-  </div>
 {% endblock %}

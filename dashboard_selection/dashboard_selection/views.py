@@ -5,7 +5,9 @@ from django.template import Context
 import json
 from django.core.files.storage import default_storage
 import os
-
+from timeline.views import get_timeline
+from progress.views import get_progress
+from leaderboard.views import get_leaderboard
 
 
 def home(request):
@@ -21,4 +23,10 @@ def get_json(request, filename):
 
 def dashboard(request, student_id):
     t = get_template('student.html')
-    return HttpResponse(t.render(Context({'student_id': student_id})))
+    timeline = get_timeline(student_id)
+    progress = get_progress(student_id)
+    leaderboard = get_leaderboard(student_id)
+    return HttpResponse(t.render(Context({'student_id': student_id,
+                                          'timeline': timeline.content,
+                                          'progress': progress.content,
+                                          'leaderboard': leaderboard.content})))

@@ -1,0 +1,17 @@
+{% load compile_static %}
+      <div class="card">
+        <h2 class="card-header">Progress</h2>
+        <div class="card-content" id="progress">
+          <div class="chart-options">
+            <label for="category">Show</label>
+            <select name="category" id="select-category">
+              <option value="problem" selected>problem</option>
+              <option value="video">video</option>
+            </select>
+            <label for="peers"> progress compared to</label>
+            <select name="peers" id="select-peer"></select>
+          </div>
+        </div>
+        <script src="{% compile 'scripts/progress-donut-chart.coffee' %}"></script>
+        <script>plot_progress({{ student_id }});</script>
+      </div>

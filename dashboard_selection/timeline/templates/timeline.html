@@ -1,0 +1,17 @@
+{% load compile_static %}
+
+      <div class="card">
+        <h2 class="card-header">Timeline</h2>
+        <div class="card-content" id="timeline">
+          <div class="chart-options">
+            <label for="timelinetype">Show</label>
+            <select name="timelinetype" id="select-timelinetype">
+              <option value="accumulated" selected>accumulated</option>
+              <option value="perday">perday</option>
+            </select>
+            <span>progress</span>
+          </div>
+        </div>
+        <script src="{% compile 'scripts/timeline-line-chart.coffee' %}"></script>
+        <script>plot_timeline({{ student_id }});</script>
+      </div>

@@ -1,0 +1,13 @@
+{% load compile_static %}
+      <div class="card">
+        <h2 class="card-header">Leaderboard</h2>
+        <div class="card-content" id="leaderboard">
+          <div class="chart-options">
+            <label for="top10">Show</label>
+            <select name="top10" id="select-top10">
+            </select>
+          </div>
+        </div>
+        <script src="{% compile 'scripts/leaderboard-bar-chart.coffee' %}"></script>
+        <script>plot_leaderboard({{ student_id }});</script>
+      </div>

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 PROJECT_DIR = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(PROJECT_DIR)
-
+SETTINGS_PATH = BASE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'static_precompiler',
-#    'django.template.loaders.app_directories.Loader',
+    'timeline',
+    'leaderboard',
+    'progress',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,9 +60,15 @@ WSGI_APPLICATION = 'dashboard_selection.wsgi.application'
 
 # Templates
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates').replace('\\', '/'),
 )
+
 
 
 # Database
