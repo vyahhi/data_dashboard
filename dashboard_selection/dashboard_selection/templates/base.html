@@ -23,7 +23,7 @@
             <option disabled="disabled" selected="selected"></option>
         </select>
         <script src="{% compile 'scripts/student-selectbox.coffee' %}"></script>
-        <script>student_box({{ student_id }});</script>
+        <script>student_box({{ student_ids | safe }}, {{ curr_student_id }});</script>
       </span>
       {% endblock %}
     </nav>

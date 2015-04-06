@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'static_precompiler',
+    # 'debug_toolbar',
     'timeline',
     'leaderboard',
     'progress',
@@ -65,6 +66,10 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+)
+
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates').replace('\\', '/'),
 )
@@ -72,17 +77,25 @@ TEMPLATE_DIRS = (
 
 
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+
+DATABASE_ROUTERS = ['dashboard_selection.db_routers.MysqlRouter']
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'data': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dashboard',
+        'USER': 'dashboard',
+        'PASSWORD': 'dashboard',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -96,9 +109,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-#from
 STATIC_PRECOMPILER_COMPILERS = (
     'dashboard_selection.coffee_bare.CoffeeScriptBare',
 )
