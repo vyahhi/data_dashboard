@@ -1,37 +1,6 @@
-plot_timeline = (studentID) ->
-   d3.json "/data/timeline.json", (activities) ->
+plot_timeline = (studentID, data) ->
+   d3.json data, (activities) ->
       render = ->
-
-         update = ->
-
-            # update y scale
-            y = y.domain([
-               0
-               (if getTimelineTypeSuffix() is "" then 100 else perdayThreshold)
-            ])
-
-            # update reference lines height
-            hlineG.selectAll("text")
-               .transition()
-               .attr("y", (d) -> y(d))
-
-            hlineG.selectAll("line")
-               .transition()
-               .attr("y1", (d) -> y(d))
-               .attr("y2", (d) -> y(d))
-
-            hlineG.call(togglePerDayReference)
-
-            # update timelines
-            (["video", "problem"]).forEach((label) ->
-               lineGen = line(label + getTimelineTypeSuffix())
-               d3.selectAll("path.#{label}-line")
-                  .transition()
-                  .attr("d", lineGen(activity))
-               return
-            )
-
-            return
 
          changeSiblingGuideOpacity = (node, val) ->
             d3.select(node.parentNode)
@@ -83,8 +52,8 @@ plot_timeline = (studentID) ->
                whetherActive = (if d.active is 1 then "active" else "inactive")
                tooltipDiv.html(p(d.date) +
                   p(whetherActive.toUpperCase(), whetherActive) +
-                  p("Problem: #{ d['problem' + labelSuffix].toFixed(1) }%", "problem") +
-                  p("Video: #{ d['video' + labelSuffix].toFixed(1) }%", "video"))
+                  p("Problem: #{ d['problem' + labelSuffix].toFixed(1) }", "problem") +
+                  p("Video: #{ d['video' + labelSuffix].toFixed(1) }", "video"))
                return
             ).on("mousemove.tooltip", ->
                positionTooltip()
@@ -200,6 +169,38 @@ plot_timeline = (studentID) ->
             .transition()
             .duration(duration)
             .attr("width", 0)
+
+         update = ->
+
+            # update y scale
+            y = y.domain([
+               0
+               (if getTimelineTypeSuffix() is "" then 100 else perdayThreshold)
+            ])
+
+            # update reference lines height
+            hlineG.selectAll("text")
+               .transition()
+               .attr("y", (d) -> y(d))
+
+            hlineG.selectAll("line")
+               .transition()
+               .attr("y1", (d) -> y(d))
+               .attr("y2", (d) -> y(d))
+
+            hlineG.call(togglePerDayReference)
+
+            # update timelines
+            (["video", "problem"]).forEach((label) ->
+               lineGen = line(label + getTimelineTypeSuffix())
+               d3.selectAll("path.#{label}-line")
+                  .transition()
+                  .attr("d", lineGen(activity))
+               return
+            )
+
+            return
+
 
          # transition between accumulated and perday data
          d3.select("#select-timelinetype")

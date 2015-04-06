@@ -13,5 +13,5 @@
           </div>
         </div>
         <script src="{% compile 'scripts/timeline-line-chart.coffee' %}"></script>
-        <script>plot_timeline({{ student_id }});</script>
+        <script>plot_timeline({{ student_id }}, "{{ path }}");</script>
       </div>

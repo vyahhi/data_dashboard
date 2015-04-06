@@ -5,7 +5,7 @@ from leaderboard.models import CourseStats
 
 
 def get_leaderboard_json(request, student_id):
-    course_id = request.GET.get('course')
+    course_id = int(request.GET.get('course'))
     rating = CourseStats.objects.raw("""
         SELECT position, user_id AS user, first_name, last_name, score AS total_score
         FROM

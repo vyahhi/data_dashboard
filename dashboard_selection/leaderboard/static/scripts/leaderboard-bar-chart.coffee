@@ -9,7 +9,7 @@ plot_leaderboard = (student_id, data) ->
    reformatScoreByLabel = (val, label) ->
       switch label
          when "score_rating"
-            val + " scores"
+            val + " points"
    #     when "top10_active"
    #        val + "days"
    #     when "top10_timespent"
