@@ -1,25 +1,22 @@
-plot_leaderboard = (student_id) ->
+plot_leaderboard = (student_id, data) ->
 
    # highlight oneself
    highlightOneself = (selection) ->
       selection.classed("lb-oneself", (d) ->
-         d.id == student_id #parseInt(d3.select("#select-student").property("value"))
+         d.user == student_id
       )
       return
    reformatScoreByLabel = (val, label) ->
       switch label
-         when "top10_problem", "top10_video"
-            (val * 100).toFixed(1) + "%"
-         when "top10_active"
-            val + "days"
-         when "top10_timespent"
-            Math.round(val / 60) + "h" + (val % 60) + "min"
+         when "score_rating"
+            val + " scores"
+   #     when "top10_active"
+   #        val + "days"
+   #     when "top10_timespent"
+   #        Math.round(val / 60) + "h" + (val % 60) + "min"
    labelToClassName = (label) -> "lb-" + label.replace("_", "-")
    labelToTitleText =
-      "top10_problem": "10 students completed most problems"
-      "top10_video": "10 students completed most videos"
-      "top10_active": "10 most active students"
-      "top10_timespent": "10 students spent most time"
+      "score_rating": "Score rating"
 
    # init table
    table = d3.select("#leaderboard")
@@ -27,7 +24,7 @@ plot_leaderboard = (student_id) ->
       .attr("width", "100%")
       .attr("height", "192px") # fixed height for proper position on small screen
 
-   d3.json "/data/leaderboard.json", (top10) ->
+   d3.json data, (top10) ->
       render = ->
          table.selectAll("*").remove()
          width = table[0][0].offsetWidth
@@ -44,7 +41,7 @@ plot_leaderboard = (student_id) ->
          # add ranks
          rows.append("td")
             .attr("class", "text-ranks")
-            .attr("width", rankWidth).text((d, i) -> "#" + (i + 1))
+            .attr("width", rankWidth).text((d) -> "# #{ d.rating}")
 
 
          # add student names
@@ -55,7 +52,7 @@ plot_leaderboard = (student_id) ->
             .transition()
             .duration(500)
             .attr("width", nameWidth)
-            .style("opacity", 1).text((d) -> "student-" + d.id)
+            .style("opacity", 1).text((d) -> "#{d.first_name} #{d.last_name}")
 
          # scaler for bars
          scaler = d3.scale
@@ -83,10 +80,7 @@ plot_leaderboard = (student_id) ->
       d3.select("#select-top10")
          .selectAll("option")
          .data([
-            "top10_problem"
-            "top10_video"
-            "top10_active"
-            "top10_timespent"
+            "score_rating"
          ]).enter()
          .append("option")
          .attr("value", (d) -> d)
@@ -94,19 +88,9 @@ plot_leaderboard = (student_id) ->
 
       render()
 
-
       # rerender when window-size or select-option changes
       d3.select(window).on("resize", render)
       d3.select("#leaderboard").on("change", render)
-
-      ###
-      # rehighlight oneself when student changes
-      d3.select("#select-student").on("change.leaderboard", ->
-         table.selectAll("td")
-            .call(highlightOneself)
-         return
-      )
-      ###
 
       return
 
