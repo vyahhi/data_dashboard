@@ -7,11 +7,11 @@ student_box = (student_ids, curr_student_id) ->
        .enter()
        .append("option")
        .attr("value", (student) -> student.user_id)
-       .attr("selected", (student) -> if student.id == curr_student_id then "selected" else null)
+       .attr("selected", (student) -> if student.user_id == curr_student_id then "selected" else null)
        .text((student) -> "Student " + student.user_id)
        .on("click", (student) ->
-          if student.id != curr_student_id
-             window.location.pathname = "/student/#{ student.user_id }"
+          if student.user_id != curr_student_id
+             window.location.pathname = "/student/#{ student.user_id }?course=67"
           return
        )
 

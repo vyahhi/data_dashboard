@@ -5,7 +5,7 @@ student_box = function(student_ids, curr_student_id) {
   d3.select("#select-student").selectAll("option").data(student_ids).enter().append("option").attr("value", function(student) {
     return student.user_id;
   }).attr("selected", function(student) {
-    if (student.id === curr_student_id) {
+    if (student.user_id === curr_student_id) {
       return "selected";
     } else {
       return null;
@@ -13,8 +13,8 @@ student_box = function(student_ids, curr_student_id) {
   }).text(function(student) {
     return "Student " + student.user_id;
   }).on("click", function(student) {
-    if (student.id !== curr_student_id) {
-      window.location.pathname = "/student/" + student.user_id;
+    if (student.user_id !== curr_student_id) {
+      window.location.pathname = "/student/" + student.user_id + "?course=67";
     }
   });
   d3.select("#select-student").on("click", function(student, i) {});
