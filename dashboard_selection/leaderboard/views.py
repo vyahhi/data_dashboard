@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.template import Context
 from django.shortcuts import render_to_response
 from leaderboard.models import CourseStats
+import json
 
 
 def get_leaderboard_json(request, student_id):
@@ -61,9 +62,9 @@ def get_leaderboard_json(request, student_id):
                                             'first_name': r.first_name,
                                             'last_name': r.last_name,
                                             'value': r.total_score}
-                                           for r in rating]))
+                                           for r in rating])).content
 
 
-def get_leaderboard(student_id, data_path):
+def get_leaderboard(student_id, data):
     return render_to_response('leaderboard.html', Context({'student_id': student_id,
-                                                           'path': data_path}))
+                                                           'data': data}))

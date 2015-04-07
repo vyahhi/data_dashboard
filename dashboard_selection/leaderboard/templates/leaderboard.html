@@ -10,5 +10,5 @@
         </div>
           
         <script src="{% compile 'scripts/leaderboard-bar-chart.coffee' %}"></script>
-        <script>plot_leaderboard({{ student_id }}, "{{ path }}");</script>
+        <script>plot_leaderboard({{ student_id }}, {{ data | safe }});</script>
       </div>

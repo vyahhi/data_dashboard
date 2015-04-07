@@ -19,6 +19,82 @@ plot_progress = function(studentID) {
   d3.json("/data/structure.json", function(structure) {
     d3.json("/data/students.json", function(data) {
       var category, darkerRange, generateComparisonText, hideHelpText, isPeerType, isStudentID, peerData, peerType, peerTypeToTitleText, render, showHelpText, studentData, update, valToPercentString;
+      hideHelpText = function() {
+        return helpText.attr("opacity", 0);
+      };
+      showHelpText = function() {
+        return helpText.attr("opacity", 0.2);
+      };
+      valToPercentString = function(val) {
+        return (Math.abs(Math.floor(val * 100))) + "%";
+      };
+      generateComparisonText = function(val) {
+        if (val >= 0) {
+          return valToPercentString(val) + " ahead of peers";
+        } else {
+          return valToPercentString(val) + " behind peers";
+        }
+      };
+      darkerRange = function(val) {
+        if (val >= 0) {
+          return val / 2 + 0.5;
+        } else {
+          return val / 2 - 0.5;
+        }
+      };
+      isStudentID = function(str) {
+        return !isNaN(str);
+      };
+      isPeerType = function(str) {
+        return isNaN(str) && str.indexOf("get") < 0;
+      };
+      peerTypeToTitleText = {
+        "avg": "all students",
+        "top10_problem": "10 students completed most problems",
+        "top10_video": "10 students completed most videos",
+        "top10_active": "10 most active students",
+        "top10_timespent": "10 students spent most time"
+      };
+      structure.getParent = function(label) {
+        return this[category].parent[label];
+      };
+      structure.getChildren = function(label) {
+        return this[category].children[label];
+      };
+      structure.checkThenRun = function(label) {
+        if (label in this[category].children) {
+          return function(nextstep) {
+            return nextstep(label);
+          };
+        } else {
+          return function(nextstep) {};
+        }
+      };
+      data.getIDs = function(filter) {
+        return Object.keys(this).filter(filter);
+      };
+      data.getPeerData = function(peerType) {
+        return this[peerType][category];
+      };
+      data.getStudentData = function(id) {
+        return this[id][category];
+      };
+      d3.select("#select-peer").selectAll("option").data(data.getIDs(isPeerType).sort()).enter().append("option").attr("value", function(d) {
+        return d;
+      }).text(function(d) {
+        return peerTypeToTitleText[d];
+      });
+      category = d3.select("#select-category").property("value");
+      peerType = d3.select("#select-peer").property("value");
+      studentData = data.getStudentData(studentID);
+      peerData = data.getPeerData(peerType);
+      update = function(label, isFGNotAnimated) {
+        render(null);
+        render(label, isFGNotAnimated);
+        if (label === "overall") {
+          hideHelpText();
+        }
+      };
       render = function(label, isFGNotAnimated) {
         var arcBG, arcComparison, arcFG, arcHover, arcs, diff, donut, donutAvg, durationNormal, durationShort, hideToArcCentroid, hideToArcCentroidAnimated, report, reportAvg, showArcReport, showArcsFG, showPercentage, slideOut;
         showPercentage = function(selection, val, isNotAnimated) {
@@ -118,7 +194,6 @@ plot_progress = function(studentID) {
         });
         arcs.exit().remove();
         d3.select("#select-category").on("change", function() {
-          var category, studentData;
           category = this.value;
           studentData = data.getStudentData(studentID);
           update(label);
@@ -133,9 +208,9 @@ plot_progress = function(studentID) {
         )
          */
         d3.select("#select-peer").on("change", function() {
-          var peerData, peerType;
           peerType = this.value;
           peerData = data.getPeerData(peerType);
+          console.log("peerData has changed to " + peerType);
           update(label, true);
         });
         arcs.on("mouseover", function() {
@@ -154,82 +229,6 @@ plot_progress = function(studentID) {
           structure.checkThenRun(structure.getParent(label))(update);
         });
       };
-      update = function(label, isFGNotAnimated) {
-        render(null);
-        render(label, isFGNotAnimated);
-        if (label === "overall") {
-          hideHelpText();
-        }
-      };
-      hideHelpText = function() {
-        return helpText.attr("opacity", 0);
-      };
-      showHelpText = function() {
-        return helpText.attr("opacity", 0.2);
-      };
-      valToPercentString = function(val) {
-        return (Math.abs(Math.floor(val * 100))) + "%";
-      };
-      generateComparisonText = function(val) {
-        if (val >= 0) {
-          return valToPercentString(val) + " ahead of peers";
-        } else {
-          return valToPercentString(val) + " behind peers";
-        }
-      };
-      darkerRange = function(val) {
-        if (val >= 0) {
-          return val / 2 + 0.5;
-        } else {
-          return val / 2 - 0.5;
-        }
-      };
-      isStudentID = function(str) {
-        return !isNaN(str);
-      };
-      isPeerType = function(str) {
-        return isNaN(str) && str.indexOf("get") < 0;
-      };
-      peerTypeToTitleText = {
-        "avg": "all students",
-        "top10_problem": "10 students completed most problems",
-        "top10_video": "10 students completed most videos",
-        "top10_active": "10 most active students",
-        "top10_timespent": "10 students spent most time"
-      };
-      structure.getParent = function(label) {
-        return this[category].parent[label];
-      };
-      structure.getChildren = function(label) {
-        return this[category].children[label];
-      };
-      structure.checkThenRun = function(label) {
-        if (label in this[category].children) {
-          return function(nextstep) {
-            return nextstep(label);
-          };
-        } else {
-          return function(nextstep) {};
-        }
-      };
-      data.getIDs = function(filter) {
-        return Object.keys(this).filter(filter);
-      };
-      data.getPeerData = function(peerType) {
-        return this[peerType][category];
-      };
-      data.getStudentData = function(id) {
-        return this[id][category];
-      };
-      d3.select("#select-peer").selectAll("option").data(data.getIDs(isPeerType).sort()).enter().append("option").attr("value", function(d) {
-        return d;
-      }).text(function(d) {
-        return peerTypeToTitleText[d];
-      });
-      category = d3.select("#select-category").property("value");
-      peerType = d3.select("#select-peer").property("value");
-      studentData = data.getStudentData(studentID);
-      peerData = data.getPeerData(peerType);
       render("overall");
     });
   });

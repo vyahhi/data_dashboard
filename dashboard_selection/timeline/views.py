@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.template import Context
 from django.shortcuts import render_to_response
 from timeline.models import UserProgress
+import json
 
 
 def get_timeline_json(request, student_id):
@@ -34,9 +35,9 @@ def get_timeline_json(request, student_id):
                                             'problemPerDay': float(r.problem_per_day),
                                             'problem': float(r.problem),
                                             'active': r.active}
-                                           for r in timeline]})
+                                           for r in timeline]}).content
 
 
-def get_timeline(student_id, data_path):
+def get_timeline(student_id, data):
     return render_to_response('timeline.html', Context({'student_id': student_id,
-                                                        'path': data_path}))
+                                                        'data': data}))

@@ -3,7 +3,7 @@ var student_box;
 
 student_box = function(student_ids, curr_student_id) {
   d3.select("#select-student").selectAll("option").data(student_ids).enter().append("option").attr("value", function(student) {
-    return student.id;
+    return student.user_id;
   }).attr("selected", function(student) {
     if (student.id === curr_student_id) {
       return "selected";
@@ -11,10 +11,10 @@ student_box = function(student_ids, curr_student_id) {
       return null;
     }
   }).text(function(student) {
-    return "Student " + student.id;
+    return "Student " + student.user_id;
   }).on("click", function(student) {
     if (student.id !== curr_student_id) {
-      window.location.pathname = "/student/" + student.id;
+      window.location.pathname = "/student/" + student.user_id;
     }
   });
   d3.select("#select-student").on("click", function(student, i) {});

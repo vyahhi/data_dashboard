@@ -6,12 +6,12 @@ student_box = (student_ids, curr_student_id) ->
        .data(student_ids)
        .enter()
        .append("option")
-       .attr("value", (student) -> student.id)
+       .attr("value", (student) -> student.user_id)
        .attr("selected", (student) -> if student.id == curr_student_id then "selected" else null)
-       .text((student) -> "Student " + student.id)
+       .text((student) -> "Student " + student.user_id)
        .on("click", (student) ->
           if student.id != curr_student_id
-             window.location.pathname = "/student/#{ student.id }"
+             window.location.pathname = "/student/#{ student.user_id }"
           return
        )
 
