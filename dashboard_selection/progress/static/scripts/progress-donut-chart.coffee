@@ -36,6 +36,80 @@ plot_progress = (studentID) ->
    d3.json "/data/structure.json", (structure) ->
       d3.json "/data/students.json", (data) ->
 
+         # helpers
+         hideHelpText = ->
+            helpText.attr "opacity", 0
+
+         showHelpText = ->
+            helpText.attr "opacity", 0.2
+
+         valToPercentString = (val) ->
+            "#{ Math.abs(Math.floor(val * 100)) }%"
+
+         generateComparisonText = (val) ->
+            (if val >= 0 then valToPercentString(val) + " ahead of peers" else valToPercentString(val) + " behind peers")
+
+         darkerRange = (val) ->
+            (if val >= 0 then val / 2 + 0.5 else val / 2 - 0.5)
+
+         isStudentID = (str) -> not isNaN(str)
+
+         isPeerType = (str) -> isNaN(str) and str.indexOf("get") < 0
+
+         peerTypeToTitleText =
+            "avg": "all students"
+            "top10_problem": "10 students completed most problems"
+            "top10_video": "10 students completed most videos"
+            "top10_active": "10 most active students"
+            "top10_timespent": "10 students spent most time"
+
+         # add some helper methods for data objects
+         structure.getParent = (label) ->
+            this[category].parent[label]
+
+         structure.getChildren = (label) ->
+            this[category].children[label]
+
+         structure.checkThenRun = (label) ->
+            # if label is a possible level, then run nextstep function, else then do nothing
+            if label of this[category].children
+               (nextstep) ->
+                  nextstep(label)
+            else
+               (nextstep) -> return
+
+         data.getIDs = (filter) ->
+            Object.keys(this).filter(filter)
+
+         data.getPeerData = (peerType) ->
+            this[peerType][category]
+
+         data.getStudentData = (id) ->
+            this[id][category]
+
+         # init selectbox for peer type
+         d3.select("#select-peer")
+            .selectAll("option")
+            .data(data.getIDs(isPeerType).sort())
+            .enter()
+            .append("option")
+            .attr("value", (d) ->
+               d
+            ).text((d) -> peerTypeToTitleText[d])
+
+         category = d3.select("#select-category").property("value")
+         #studentID = d3.select("#select-student").property("value")
+         peerType = d3.select("#select-peer").property("value")
+         studentData = data.getStudentData(studentID)
+         peerData = data.getPeerData(peerType)
+
+
+         update = (label, isFGNotAnimated) ->
+            render null # clean previous data to avoid data collision
+            render label, isFGNotAnimated
+            hideHelpText() if label is "overall"
+            return
+
          render = (label, isFGNotAnimated) ->
             # animation helpers
             showPercentage = (selection, val, isNotAnimated) ->
@@ -226,6 +300,7 @@ plot_progress = (studentID) ->
             d3.select("#select-peer").on("change", ->
                peerType = @value
                peerData = data.getPeerData(peerType)
+               console.log("peerData has changed to " + peerType)
                update(label, true)
                return
             )
@@ -265,78 +340,7 @@ plot_progress = (studentID) ->
 
             return
 
-         # helpers
-         update = (label, isFGNotAnimated) ->
-            render null # clean previous data to avoid data collision
-            render label, isFGNotAnimated
-            hideHelpText()  if label is "overall"
-            return
 
-         hideHelpText = ->
-            helpText.attr "opacity", 0
-
-         showHelpText = ->
-            helpText.attr "opacity", 0.2
-
-         valToPercentString = (val) ->
-            "#{ Math.abs(Math.floor(val * 100)) }%"
-
-         generateComparisonText = (val) ->
-            (if val >= 0 then valToPercentString(val) + " ahead of peers" else valToPercentString(val) + " behind peers")
-
-         darkerRange = (val) ->
-            (if val >= 0 then val / 2 + 0.5 else val / 2 - 0.5)
-
-         isStudentID = (str) -> not isNaN(str)
-
-         isPeerType = (str) -> isNaN(str) and str.indexOf("get") < 0
-
-         peerTypeToTitleText =
-            "avg": "all students"
-            "top10_problem": "10 students completed most problems"
-            "top10_video": "10 students completed most videos"
-            "top10_active": "10 most active students"
-            "top10_timespent": "10 students spent most time"
-
-         # add some helper methods for data objects
-         structure.getParent = (label) ->
-            this[category].parent[label]
-
-         structure.getChildren = (label) ->
-            this[category].children[label]
-
-         structure.checkThenRun = (label) ->
-            # if label is a possible level, then run nextstep function, else then do nothing
-            if label of this[category].children
-               (nextstep) ->
-                  nextstep(label)
-            else
-               (nextstep) -> return
-
-         data.getIDs = (filter) ->
-            Object.keys(this).filter(filter)
-
-         data.getPeerData = (peerType) ->
-            this[peerType][category]
-
-         data.getStudentData = (id) ->
-            this[id][category]
-
-         # init selectbox for peer type
-         d3.select("#select-peer")
-            .selectAll("option")
-            .data(data.getIDs(isPeerType).sort())
-            .enter()
-            .append("option")
-            .attr("value", (d) ->
-               d
-            ).text((d) -> peerTypeToTitleText[d])
-
-         category = d3.select("#select-category").property("value")
-         #studentID = d3.select("#select-student").property("value")
-         peerType = d3.select("#select-peer").property("value")
-         studentData = data.getStudentData(studentID)
-         peerData = data.getPeerData(peerType)
 
 
          # rendering starts from 'overall' level
